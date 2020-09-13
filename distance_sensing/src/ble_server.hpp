@@ -9,26 +9,22 @@
  * 
  */
 
-#include <Arduino.h>
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
-
 #pragma once
+
+#include "ble_common.hpp"
 
 /****************************************************************
  * Definitions and Constants
  ***************************************************************/
-#if SERVER_MODE
-    static constexpr char DEVICE_NAME[]  = "Distance_Server";
-#elif CLIENT_MODE
-    static constexpr char DEVICE_NAME[]  = "Distance_Client";
-#endif
-
-static constexpr char SERVICE_UUID[] = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+static constexpr char DEVICE_NAME[]  = "Distance_Server";
 
 /****************************************************************
  * Function Prototypes
+ ***************************************************************/
+/**Empty here */
+
+/****************************************************************
+ * Global Variables
  ***************************************************************/
 /**Empty here */
 
@@ -51,7 +47,7 @@ class peripheralCallback : public BLEServerCallbacks{
 };
 
 /****************************************************************
- * Classes
+ * Function Definition
  ***************************************************************/
 
 void start_bluetooth_server()
