@@ -1,5 +1,7 @@
 # BLE Contact Tracing Device
 
+[![Build Status](https://travis-ci.com/nacansino/distance_sensing_ble.svg?token=gRaedFrvoyuiPGHhfvoK&branch=master)](https://travis-ci.com/nacansino/distance_sensing_ble)
+
 A contact tracing device prototype using ESP32 devices.
 
 ## Goals of this project
