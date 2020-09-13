@@ -19,9 +19,6 @@
 /****************************************************************
  * Definitions and Constants
  ***************************************************************/
-#define SERVER_MODE true
-#define CLIENT_MODE false;
-
 #if SERVER_MODE
     static constexpr char DEVICE_NAME[]  = "Distance_Server";
 #elif CLIENT_MODE
