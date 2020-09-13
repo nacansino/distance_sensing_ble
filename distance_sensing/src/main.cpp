@@ -31,6 +31,7 @@ void loop() {
     /**Nothing to do here */
 #elif CLIENT_MODE
     do_client_tasks();
+    publish_rssi();
 #endif
 
 }

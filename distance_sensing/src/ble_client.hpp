@@ -26,9 +26,10 @@ static constexpr char DEVICE_NAME[]  = "Distance_Client";
 /****************************************************************
  * Global Variables
  ***************************************************************/
-static boolean doConnect = false;
-static boolean connected = false;
-static boolean doScan    = false;
+static boolean doConnect        = false;
+static boolean connected        = false;
+static boolean doScan           = false;
+static int     rssi_measurement = -9999;
 static BLEAdvertisedDevice* myDevice;
 static BLEClient*           pClient;
 
@@ -123,6 +124,15 @@ bool connectToServer() {
 
 void do_client_tasks()
 {
+    static constexpr unsigned CLIENT_TASK_PERIOD_MS = 500;
+    static unsigned long last_called = millis();
+
+    if(millis() - last_called < CLIENT_TASK_PERIOD_MS)
+    {
+        /**Not your turn yet */
+        return;
+    }
+
     // If the flag "doConnect" is true then we have scanned for and found the desired
     // BLE Server with which we wish to connect.  Now we connect to it.  Once we are 
     // connected we set the connected flag to be true.
@@ -144,7 +154,9 @@ void do_client_tasks()
     
         /**Do service tasks here */  
         if (myDevice->haveRSSI()){
-            Serial.printf("Rssi: %d \n", (int)pClient->getRssi());
+
+            rssi_measurement = (int)pClient->getRssi();
+        
         }
     
     }
@@ -153,6 +165,33 @@ void do_client_tasks()
         BLEDevice::getScan()->start(0);  // this is just example to start scan after disconnect, most likely there is better way to do it in arduino
     }
 
-    /**1s delay */
-    delay(250);
+    last_called = millis();
+}
+
+void publish_rssi()
+{
+    static constexpr unsigned RSSI_PUBLISH_PERIOD_MS = 500;
+
+    static unsigned long last_publish_ms    = millis();
+    static boolean       toPublishRSSI      = false;
+    
+    if(toPublishRSSI && ((millis() - last_publish_ms) >= RSSI_PUBLISH_PERIOD_MS))
+    {
+        Serial.printf("Rssi: %d \n", rssi_measurement);
+        last_publish_ms = millis();
+    }
+    
+    /**Turn on/off */
+    if(Serial.available())
+    {
+        String user_cmd = Serial.readString();
+        if(user_cmd == "o")
+        {
+            toPublishRSSI = true;
+        }
+        else if (user_cmd == "f")
+        {
+            toPublishRSSI = false;
+        }
+    }
 }
