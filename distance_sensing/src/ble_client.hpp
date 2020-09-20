@@ -171,6 +171,7 @@ void do_client_tasks()
 void publish_rssi()
 {
     static constexpr unsigned RSSI_PUBLISH_PERIOD_MS = 500;
+    static String char_buffer;
 
     static unsigned long last_publish_ms    = millis();
     static boolean       toPublishRSSI      = false;
@@ -185,11 +186,15 @@ void publish_rssi()
     if(Serial.available())
     {
         String user_cmd = Serial.readString();
-        if(user_cmd == "o")
+        
+        user_cmd.replace("\r", "");
+        user_cmd.replace("\n", "");
+
+        if(user_cmd == "start")
         {
             toPublishRSSI = true;
         }
-        else if (user_cmd == "f")
+        else if (user_cmd == "end")
         {
             toPublishRSSI = false;
         }
